@@ -21,29 +21,18 @@ plot_carte_type_methode <- function(graphelayout, données, titre) { # plot les 
   
   # Associer des couleurs aux méthodes
   #couleurs <- rainbow(length(unique(methodes)))
-  #couleurs <- c("black", "darkgrey", "blue", "red", "green", "purple", "orange", "pink", "brown", "cyan", "magenta")
   couleurs <- c("black", "darkgrey", "navy", "firebrick", "forestgreen", "gold", "#4B0082", "#008080", "darkorange", "deeppink", "darkviolet")
   
-  # Exemple d'utilisation dans un plot
 
   noms_couleurs <- setNames(couleurs, unique(methodes))
   
   
   # Définir la taille des nœuds
-  vertex_size <- rep(5, length(methodes))  # Taille par défaut
-  
-  # Identifier les indices des méthodes noir et gris foncé
-  #indices_gros_points <- which(methodes %in% names(noms_couleurs)[noms_couleurs %in% c("black", "darkgrey")])
-  
-  # Ajuster la taille pour les nœuds identifiés
-  #vertex_size[indices_gros_points] <- 10  
- # Tracer uniquement les nœuds avec les couleurs associées aux méthodes
+  vertex_size <- rep(5, length(methodes)) 
   
   plot(graphe, layout = layout, vertex.label = "", vertex.size = vertex_size,
        vertex.color = noms_couleurs[methodes], edge.color = "white", edge.width = 0, main = titre)
   
-  
-  # Créer la légende avec une taille de texte réduite
 
   plot.new()
   legend("center", legend = names(noms_couleurs), col = couleurs, pch = 19, title = "Méthodes", bty = "n", cex = 0.8)
@@ -93,14 +82,10 @@ plot_carte_resultat <- function(graphelayout, données) {# plot les élections a
 bor<-plot_carte(distance_borda)
 pos<-plot_carte(distance_pos)
 
-
-
 plot_carte_type_methode(bor, données, "Carte pour la Distance de Borda")
 plot_carte_resultat(bor, données)
 
-
 plot_carte_type_methode(pos, données, "Carte pour la Distance positionnelle")
-
 plot_carte_resultat(pos, données)
 
 
