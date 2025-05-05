@@ -1,7 +1,6 @@
 #install.packages('igraph')
 library(igraph)
 
-
 # on prend L'algorithme de Kamada-Kawai est une méthode de placement de graphes qui vise à 
 # positionner les nœuds d'un graphe dans un espace 2D ou 3D de manière à minimiser la différence 
 # entre les distances géométriques des nœuds et leurs distances théoriques dans le graphe
@@ -21,23 +20,37 @@ plot_carte_type_methode <- function(graphelayout, données, titre) { # plot les 
   methodes <- sapply(données, function(item) item$methode)
   
   # Associer des couleurs aux méthodes
-  couleurs <- rainbow(length(unique(methodes)))
+  #couleurs <- rainbow(length(unique(methodes)))
+  #couleurs <- c("black", "darkgrey", "blue", "red", "green", "purple", "orange", "pink", "brown", "cyan", "magenta")
+  couleurs <- c("black", "darkgrey", "navy", "firebrick", "forestgreen", "gold", "#4B0082", "#008080", "darkorange", "deeppink", "darkviolet")
+  
+  # Exemple d'utilisation dans un plot
+
   noms_couleurs <- setNames(couleurs, unique(methodes))
   
-  # Tracer uniquement les nœuds avec les couleurs associées aux méthodes
   
-  plot(graphe, layout = layout, vertex.label = "", vertex.size = 5,
+  # Définir la taille des nœuds
+  vertex_size <- rep(5, length(methodes))  # Taille par défaut
+  
+  # Identifier les indices des méthodes noir et gris foncé
+  #indices_gros_points <- which(methodes %in% names(noms_couleurs)[noms_couleurs %in% c("black", "darkgrey")])
+  
+  # Ajuster la taille pour les nœuds identifiés
+  #vertex_size[indices_gros_points] <- 10  
+ # Tracer uniquement les nœuds avec les couleurs associées aux méthodes
+  
+  plot(graphe, layout = layout, vertex.label = "", vertex.size = vertex_size,
        vertex.color = noms_couleurs[methodes], edge.color = "white", edge.width = 0, main = titre)
   
   
   # Créer la légende avec une taille de texte réduite
-  
+
   plot.new()
   legend("center", legend = names(noms_couleurs), col = couleurs, pch = 19, title = "Méthodes", bty = "n", cex = 0.8)
   
 }
 
-
+données[[i]]$methode
 
 
 plot_carte_resultat <- function(graphelayout, données) {# plot les élections avec en légende le nombre de gagnant différent
@@ -47,7 +60,7 @@ plot_carte_resultat <- function(graphelayout, données) {# plot les élections a
   n <- length(données)
   l <- c()
   
-  titre <- paste("Nombre de gagnant différent avec 8 méthodes")
+  titre <- paste("Nombre de gagnants différents avec 8 méthodes")
   
   for (i in 1:n) {
     # Comparer les résultats des deux méthodes spécifiées
@@ -82,11 +95,11 @@ pos<-plot_carte(distance_pos)
 
 
 
-plot_carte_type_methode(bor, données, "Carte pour distance_borda")
+plot_carte_type_methode(bor, données, "Carte pour la Distance de Borda")
 plot_carte_resultat(bor, données)
 
 
-plot_carte_type_methode(pos, données, "Carte pour distance_pos")
+plot_carte_type_methode(pos, données, "Carte pour la Distance positionnelle")
 
 plot_carte_resultat(pos, données)
 

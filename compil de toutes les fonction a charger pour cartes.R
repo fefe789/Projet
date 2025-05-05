@@ -33,17 +33,6 @@ cube_1=function(nb_candidats,nb_electeurs){
 
 
 
-Cube_2=function(nb_candidats,nb_electeurs){ # idem cube_1 en dimension 2
-  cand<-replicate(nb_candidats,runif(2))
-  votes<-replicate(nb_electeurs,cand-runif(2))
-  votes<-apply(votes, c(2, 3), function(x) norm(as.matrix(x), type = "2"))
-  for(i in 1:nb_electeurs){
-    votes[,i]<-order(votes[,i])
-  }
-  return(votes)
-}
-
-
 
 
 Cube_3=function(nb_candidats,nb_electeurs){# idem cube_1 en dimension 3
@@ -57,18 +46,6 @@ Cube_3=function(nb_candidats,nb_electeurs){# idem cube_1 en dimension 3
 }
 
 
-
-Cube_n=function(nb_candidats,nb_electeurs,n=2){# idem cube_1 en dimension n
-  cand<-replicate(nb_candidats,runif(n))
-  votes<-replicate(nb_electeurs,cand-runif(n))
-  print(votes)
-  votes<-apply(votes, c(2, 3), function(x) sum(abs(x)^n)^(1/n))
-  print(votes)
-  for(i in 1:nb_electeurs){
-    votes[,i]<-order(votes[,i])
-  }
-  return(votes)
-}
 
 
 
@@ -89,23 +66,22 @@ Cercle=function(nb_candidats,nb_electeurs){
   return(votes)
 }
 
-
-
-sphere=function(nb_candidats,nb_electeurs){ # idem cercle mais sur une sphere
-  cand<-replicate(nb_candidats,c(runif(1,min=0,max=2*pi),runif(1,min=-pi/2,max=pi/2)))
-  cand<-apply(cand,2,FUN= function(x) c(sin(x[2])*sin(x[1]),sin(x[2])*cos(x[1]),cos(x[2])))
-  votes<-replicate(nb_electeurs,c(runif(1,min=0,max=2*pi),runif(1,min=-pi/2,max=pi/2)))
-  result <- array(NA, dim = c( 3, nb_candidats,nb_electeurs))
+Disque=function(nb_candidats,nb_electeurs){
+  cand<-replicate(nb_candidats,c(runif(1,min=0,max=1),runif(1,min=0,max=2*pi)))# génère  pour chaque candidats un nombre uniformémentdans [0,1] et  dans [0,2pi]
+  cand<-apply(cand,2,FUN= function(x) c(x[1]*sin(x[2]),x[1]*cos(x[2]))) # donne la position du candidat sur le cercle
+  votes<-replicate(nb_electeurs,c(runif(1,min=0,max=1),runif(1,min=0,max=2*pi))) # idem pour les électeurs
+  result <- array(NA, dim = c( 2, nb_candidats,nb_electeurs)) 
   for (i in 1:nb_electeurs) {
-    voter_coord <-c(sin(votes[2,i])*sin(votes[1,i]),sin(votes[2,i])*cos(votes[1,i]),cos(votes[2,i]))
-    result[, ,i] <- cand - voter_coord  
+    voter_coord <- c(votes[1,i]*sin(votes[2,i]), votes[1,i]*cos(votes[2,i])) 
+    result[, ,i] <- cand - voter_coord  #différence entre les postions des électeurs et candidats
   }
-  votes<-apply(result, c(2, 3), function(x) norm(as.matrix(x), type = "2"))
+  votes<-apply(result, c(2, 3), function(x) norm(as.matrix(x), type = "2")) # calcule les distances
   for(i in 1:nb_electeurs){
-    votes[,i]<-order(votes[,i])
+    votes[,i]<-order(votes[,i]) # trie et donc le classment
   }
   return(votes)
 }
+
 
 
 
@@ -146,7 +122,8 @@ Single_peak_walsh=function(nb_candidats,nb_electeurs){ # idem Single_peak_conitz
 
 
 
-Urn_Model=function(nb_candidats,nb_electeurs,alpha){ 
+Urn_Model=function(nb_candidats,nb_electeurs){ 
+  alpha<-rgamma(1,0.8,1)
   votes<- matrix(0,nb_candidats,nb_electeurs)
   for(i in 1:nb_electeurs){
     u<-runif(1) # tire une uniforme
@@ -206,7 +183,8 @@ mallows_vote <- function(nb_candidats, phi) {
 mallows_vote(10, 0.8)
 
 
-mallows_election <- function(nb_candidats, nb_electeurs, phi) {
+mallows_election <- function(nb_candidats, nb_electeurs) {
+  phi<-runif(1)
   votes <- replicate(nb_electeurs, mallows_vote(nb_candidats, phi))
   return(matrix(unlist(votes), nrow = nb_candidats, byrow = FALSE))
 }

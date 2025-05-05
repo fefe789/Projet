@@ -1,37 +1,31 @@
-nb_candidats<-8
-nb_electeurs<-50
+nb_candidats<-10
+nb_electeurs<-51
 
 # Initialiser une grande liste pour contenir tous les éléments
 données <- list()
 
 # Liste des fonctions de génération de votes
 generation_functions <- list(
-  Impartial_Culture,
-  cube_1, 
-  Cube_2, 
-  Cube_3, 
   Identite,
   Oppose, 
-  Single_peak_conitzer, 
-  Single_peak_walsh, 
+  Impartial_Culture,
+  Urn_Model,
+  mallows_election,
+  cube_1,
   Cercle,
-  function(nb_candidats, nb_electeurs) Urn_Model(nb_candidats, nb_electeurs, 0.2),
-  function(nb_candidats, nb_electeurs) Urn_Model(nb_candidats, nb_electeurs, 0.5),
-  function(nb_candidats, nb_electeurs) Urn_Model(nb_candidats, nb_electeurs, 1),
-  function(nb_candidats, nb_electeurs) mallows_election(nb_candidats, nb_electeurs, phi = 0.2),
-  function(nb_candidats, nb_electeurs) mallows_election(nb_candidats, nb_electeurs, phi = 0.5),
-  function(nb_candidats, nb_electeurs) mallows_election(nb_candidats, nb_electeurs, phi = 1)
+  Disque,
+  Cube_3, 
+  Single_peak_walsh, 
+  Single_peak_conitzer
 )
 
 # Liste des méthodes correspondantes
 methodes <- c(
-  "IC", "cube_1", "cube_2", "cube_3", "cercle", "ID",
-  "opposé", "Single_peak_conitzer", "Single_peak_walsh", "Sphere",
-  "urn-0.2", "urn-0.5", "urn-1","MAllows-0.2","MAllows-0.5","MAllows-1"
+  "ID","Opposé","IC","Urn","Mallows", "Cube 1D","Cercle","Disque","Cube 3D","Single peak walsh","Single peak conitzer"
 )
 
 # Indices personnalisés pour chaque méthode
-sizes <- c(10,10,10,10,10,1,1,10,10,10,10,10,10,10,10,10)
+sizes <- c(1,1,20,60,60,20,20,20,20,20,20)
 indices <-  generate_indices(sizes)
 
 # Fonction pour ajouter des votes à la liste de données
